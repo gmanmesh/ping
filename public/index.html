@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chat</title>
   <style>
+    /* Your styles here */
     body {
       font-family: Arial, sans-serif;
       background: #f0f0f0;
@@ -31,9 +31,6 @@
     }
     #messages div {
       margin-bottom: 10px;
-    }
-    #messages span {
-      display: block;
     }
     #message-form {
       display: flex;
@@ -61,61 +58,56 @@
       <button type="submit" id="send-btn">Send</button>
     </form>
   </div>
-  <script>
-    const username = "Student";
-  </script>
 
-    <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+  <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
   <script>
+    // Prompt for username once
+    const username = prompt('Enter your username');
+
+    // Get DOM elements
+    const messagesDiv = document.getElementById('messages');
+    const form = document.getElementById('message-form');
+    const input = document.getElementById('message-input');
+
+    // Initialize Pusher
    
-   //Initialize Pusher Client 
     const PUSHER_KEY=process.env.NEXT_PUBLIC_PUSHER_KEY
     const PUSHER_CLUSTER=process.env.NEXT_PUBLIC_PUSHER_CLUSTER
+    const pusher = new Pusher('PUSHER_KEY', {
+      cluster: 'PUSHER_CLUSTER',
+    });
 
-   const pusherClient  = new Pusher(PUSHER_KEY,{
-    cluster: PUSHER_CLUSTER
-   })
-   const channel = pusherClient.subscribe('chat');
-   channel.bind('new-message', function(data) {
-    const msgDiv = document.createElement('div');
-    msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message} <br/><small>${new Date(data.timestamp).toLocaleTimeString()}</small>`;
-    messagesDiv.appendChild(msgDiv);
-    // Scroll to latest message
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;   
-   })
+    const channel = pusher.subscribe('chat');
 
-   
+    channel.bind('new-message', function(data) {
+      const msgDiv = document.createElement('div');
+      msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message} <br/><small>${new Date(data.timestamp).toLocaleTimeString()}</small>`;
+      messagesDiv.appendChild(msgDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to latest
+    });
+
     // Handle form submit
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const messageText = input.value.trim();
       if (messageText !== '') {
-        // Send message to server
-        fetch('https://real-time-chat-ruby.vercel.app/api/sendMessage',{
-            method: 'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({username:username, message: messageText})
-        }).then(res => {
-            if(res.ok){
-              const result = res.json();
-              if(result.success){
-                input.value = '';
-                input.focus();
-              }
-            }       
-        });
+        // Send message to your API
+        fetch('/api/sendMessage', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, message: messageText }),
+        }).then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              input.value = '';
+              input.focus();
+            } else {
+              alert('Error sending message');
+            }
+          });
       }
-    });
-
-    // Listen for new chat messages
-    socket.on('chatMessage', (data) => {
-      const msgDiv = document.createElement('div');
-      msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message} <br/><small>${new Date(data.timestamp).toLocaleTimeString()}</small>`;
-      messagesDiv.appendChild(msgDiv);
-      // Scroll to latest message
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
   </script>
 </body>

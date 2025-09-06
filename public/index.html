@@ -61,14 +61,19 @@
       <button type="submit" id="send-btn">Send</button>
     </form>
   </div>
+  <script>
+    const username = prompt("Enter your username:", "Guest") || "Guest";
+  </script>
 
     <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
   <script>
    
    //Initialize Pusher Client 
+    const PUSHER_KEY=process.env.NEXT_PUBLIC_PUSHER_KEY
+    const PUSHER_CLUSTER=process.env.NEXT_PUBLIC_PUSHER_CLUSTER
 
-   const pusherClient  = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY,{
-    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER
+   const pusherClient  = new Pusher(PUSHER_KEY,{
+    cluster: PUSHER_CLUSTER
    })
    const channel = pusherClient.subscribe('chat');
    channel.bind('new-message', function(data) {

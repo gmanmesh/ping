@@ -62,7 +62,7 @@
   <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
   <script>
     // Prompt for username once
-    const username = "Student;
+    const username = prompt('Enter your username');
 
     // Get DOM elements
     const messagesDiv = document.getElementById('messages');
@@ -71,8 +71,8 @@
 
     // Initialize Pusher
    
-    const PUSHER_KEY=process.env.NEXT_PUBLIC_PUSHER_KEY
-    const PUSHER_CLUSTER=process.env.NEXT_PUBLIC_PUSHER_CLUSTER
+    const PUSHER_KEY='c82eb8f9a428d43d7155'
+    const PUSHER_CLUSTER='ap2'
     const pusher = new Pusher(PUSHER_KEY, {
       cluster: PUSHER_CLUSTER,
     });

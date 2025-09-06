@@ -86,7 +86,7 @@
       const messageText = input.value.trim();
       if (messageText !== '') {
         // Send message to server
-        fetch('/api/sendMessage',{
+        fetch('https://real-time-chat-ruby.vercel.app/api/sendMessage',{
             method: 'POST',
             headers:{
                 'Content-Type':'application/json'

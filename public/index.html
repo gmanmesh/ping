@@ -54,6 +54,10 @@
   margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+.small-text {
+  font-size: 0.6em; 
+  color: #555; 
+}
   </style>
 </head>
 <body>
@@ -88,9 +92,29 @@
     channel.bind('new-message', function(data) {
       const msgDiv = document.createElement('div');
       msgDiv.className = 'message-card';
-      msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message} <br/><small>${new Date(data.timestamp).toLocaleTimeString()}</small>`;
+    
+  // Format date with full date and time
+   const dateOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
+  const formattedDate = new Date(data.timestamp).toLocaleString(undefined, dateOptions);
+
+  // Create a small date element
+  const dateElem = document.createElement('div');
+  dateElem.className = 'small-text';
+  dateElem.textContent = formattedDate;
+
+  // Set message content
+  msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message}<br/>`;
+  msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message}<br/>`;
+      
+      msgDiv.appendChild(dateElem);
       messagesDiv.appendChild(msgDiv);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to latest
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
 
     // Handle form submit

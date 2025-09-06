@@ -48,6 +48,13 @@
       margin-left: 8px;
       cursor: pointer;
     }
+  .message-card {
+  background-color: #f0f0f0; /* light gray */
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* optional for better look */
+}
   </style>
 </head>
 <body>
@@ -81,6 +88,7 @@
 
     channel.bind('new-message', function(data) {
       const msgDiv = document.createElement('div');
+      msgDiv.className = 'message-card';
       msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message} <br/><small>${new Date(data.timestamp).toLocaleTimeString()}</small>`;
       messagesDiv.appendChild(msgDiv);
       messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to latest

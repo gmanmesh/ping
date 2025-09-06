@@ -94,8 +94,11 @@
             body:JSON.stringify({username:username, message: messageText})
         }).then(res => {
             if(res.ok){
+              const result = res.json();
+              if(result.success){
                 input.value = '';
                 input.focus();
+              }
             }       
         });
       }

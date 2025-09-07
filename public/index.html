@@ -65,19 +65,20 @@
     <div id="messages"></div>
     <form id="message-form">
       <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off" required />
-      <button type="submit" id="send-btn">Send</button>
+      <button type="submit" id="send-btn">'>'</button>
     </form>
   </div>
 
   <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
   <script>
     // Prompt for username once
-    const username = prompt('Enter your username');
+    const username = prompt('Enter your Ping username');
 
     // Get DOM elements
     const messagesDiv = document.getElementById('messages');
     const form = document.getElementById('message-form');
     const input = document.getElementById('message-input');
+    const send = document.getElementById('send-btn');
 
     // Initialize Pusher
    
@@ -122,6 +123,8 @@
       const messageText = input.value.trim();
       if (messageText !== '') {
         // Send message to your API
+        input.disabled = true;
+        send.disabled = true;
         fetch('/api/sendMessage', {
           method: 'POST',
           headers: {
@@ -134,7 +137,11 @@
              // alert("Message Sent!");
               input.value = '';
               input.focus();
+               input.disabled = false;
+               send.disabled = false;
             } else {
+              input.disabled = false;
+              send.disabled = false;
               alert('Error sending message');
             }
           });

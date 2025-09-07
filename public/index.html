@@ -86,7 +86,7 @@
     const input = document.getElementById('message-input');
     const send = document.getElementById('send-btn');
     
-    const badge = document.getElementById('notification-badge');
+   // const badge = document.getElementById('notification-badge');
     
     // Initialize Pusher
     const PUSHER_KEY='c82eb8f9a428d43d7155'
@@ -97,26 +97,26 @@
 
     const channel = pusher.subscribe('chat');
     // Request permission on page load or user interaction
-      if (Notification.permission !== 'granted') {
-        Notification.requestPermission();
-      }
+      //if (Notification.permission !== 'granted') {
+       // Notification.requestPermission();
+      //}
 
     channel.bind('new-message', function(data) {
 
        // Show notification if permission granted
       
-    if (Notification.permission === 'granted') {
+   // if (Notification.permission === 'granted') {
       // Show in-app notification
       //badge.style.display = 'block';
 
   //  hide after some seconds
-  setTimeout(() => {
-    badge.style.display = 'none';
-  }, 60000);
-    new Notification(`New message from ${data.username}`, {
-      body: data.message,
-    });
-  }
+  //setTimeout(() => {
+   // badge.style.display = 'none';
+ // }, 60000);
+    //new Notification(`New message from ${data.username}`, {
+     // body: data.message,
+    //});
+  //}
       const msgDiv = document.createElement('div');
       msgDiv.className = 'message-card';
     

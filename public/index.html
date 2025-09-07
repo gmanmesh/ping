@@ -85,9 +85,10 @@
     const form = document.getElementById('message-form');
     const input = document.getElementById('message-input');
     const send = document.getElementById('send-btn');
-
+    
+    const badge = document.getElementById('notification-badge');
+    
     // Initialize Pusher
-   
     const PUSHER_KEY='c82eb8f9a428d43d7155'
     const PUSHER_CLUSTER='ap2'
     const pusher = new Pusher(PUSHER_KEY, {
@@ -105,6 +106,13 @@
        // Show notification if permission granted
       
     if (Notification.permission === 'granted') {
+      // Show in-app notification
+      badge.style.display = 'block';
+
+  //  hide after some seconds
+  setTimeout(() => {
+    badge.style.display = 'none';
+  }, 60000);
     new Notification(`New message from ${data.username}`, {
       body: data.message,
     });
@@ -140,7 +148,7 @@
       e.preventDefault();
       const messageText = input.value.trim();
       if (messageText !== '') {
-        // Send message to your API
+        // Send message to API
         input.disabled = true;
         send.disabled = true;
         fetch('/api/sendMessage', {
@@ -165,17 +173,6 @@
           });
       }
     });
-
-    const badge = document.getElementById('notification-badge');
-    channel.bind('new-message', function(data) {
-  // Show in-app notification
-  badge.style.display = 'block';
-
-  //  hide after some seconds
-  setTimeout(() => {
-    badge.style.display = 'none';
-  }, 60000);
-});
   </script>
 </body>
 </html>

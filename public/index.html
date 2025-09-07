@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real-Time Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    #messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    #messages div {
+      margin-bottom: 10px;
+    }
+    #messages span {
+      display: block;
+    }
+    #message-form {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+    }
+    #message-input {
+      flex: 1;
+      padding: 8px;
+      font-size: 1em;
+    }
+    #send-btn {
+      padding: 8px 16px;
+      font-size: 1em;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="messages"></div>
+    <form id="message-form">
+      <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off" required />
+      <button type="submit" id="send-btn">Send</button>
+    </form>
+  </div>
+
+  <!-- Include Socket.io client library -->
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+    integrity="sha384-f4WhQdUe1xkFz4G3k0zByX8FGk9Kk2nU6p1a7V9lXj8A1U8mSb6a6hYevV7X8P0R"
+    crossorigin="anonymous"></script>
+
+  <script>
+    // Connect to the backend server
+    // Adjust the URL if needed
+    const socket = io();
+
+    const messagesDiv = document.getElementById('messages');
+    const form = document.getElementById('message-form');
+    const input = document.getElementById('message-input');
+
+    // Prompt for username
+    const username = prompt("Enter your username:", "Guest") || "Guest";
+
+    // Join a room (optional)
+    // socket.emit('joinRoom', { room: 'general' });
+
+    // Handle form submit
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const messageText = input.value.trim();
+      if (messageText !== '') {
+        // Send message to server
+        socket.emit('chatMessage', {
+          message: messageText,
+          username: username,
+          // room: 'general' // if using rooms
+        });
+        input.value = '';
+      }
+    });
+    
+    // Listen for new chat messages
+    socket.on('chatMessage', (data) => {
+      const msgDiv = document.createElement('div');
+      msgDiv.innerHTML = `<strong>${data.username}</strong>: ${data.message} <br/><small>${new Date(data.timestamp).toLocaleTimeString()}</small>`;
+      messagesDiv.appendChild(msgDiv);
+      // Scroll to latest message
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+  </script>
+</body>
+</html>
